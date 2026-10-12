@@ -1,0 +1,12 @@
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Office temp
+~$*
