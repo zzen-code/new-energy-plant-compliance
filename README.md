@@ -101,6 +101,7 @@ references 中每一条文件都带等级标记，**未核验的不得作为结�
 new-energy-plant-compliance/
 ├── SKILL.md                              # 入口：执业人格 + 八条核心原则 + 工作流
 ├── README.md                             # 本文件
+├── LICENSE                               # MIT
 ├── references/
 │   ├── legal-framework.md                # 六层法规体系
 │   ├── lifecycle-gates.md                # 10 阶段闸门
@@ -117,8 +118,15 @@ new-energy-plant-compliance/
 │   ├── red-flags.md                      # 12 类高风险违规点
 │   ├── authorities-and-verification.md   # 核验规程与权威入口
 │   └── engineer-persona.md               # 执业人格与引用纪律
-└── templates/
-    └── compliance-ledger.md              # 合规台账输出模板
+├── templates/
+│   └── compliance-ledger.md              # 合规台账输出模板
+├── scripts/
+│   └── validate_skill.py                 # 结构校验脚本（可本地运行）
+└── .github/
+    ├── REVIEW_CHECKLIST.md               # 季度复核清单
+    └── workflows/
+        ├── validate.yml                  # CI：结构校验
+        └── quarterly-review.yml          # 定时：创建复核 issue
 ```
 
 ---
@@ -178,6 +186,25 @@ GB/T 19963-2011 还是现行标准吗？
 - 涉及行政处罚、诉讼、重大投资决策时，请咨询专业人士。
 - 厂商型号与技术参数为**快照**，设备换代快，**招标前必须回厂商官网复核**。
 - **使用手册（安装/调试/运维）绝大多数是厂商受控文件**，公开渠道无法获取，本项目只提供获取途径。
+
+---
+
+## 仓库自动化
+
+| Workflow | 触发 | 作用 |
+|---|---|---|
+| `.github/workflows/validate.yml` | push / PR | 校验 SKILL.md 的 frontmatter 合法性、字符数阈值、引用完整性。**专为防止 frontmatter 写错导致技能被静默跳过**（本项目真实踩过：description 里出现未加引号的 `: `，技能直接从加载目录消失） |
+| `.github/workflows/quarterly-review.yml` | 每季度（1/4/7/10 月 1 日 01:00 UTC） | 自动创建复核 issue；已存在未关闭的同类 issue 时跳过，不刷屏 |
+
+复核清单见 [`.github/REVIEW_CHECKLIST.md`](.github/REVIEW_CHECKLIST.md)，按"变化速度"排序：电价与市场规则（季度）→ 标准现行状态（半年）→ 法律修订（年度）。
+
+**本地校验**（无第三方依赖，装不装 PyYAML 都能跑）：
+
+```bash
+python scripts/validate_skill.py
+```
+
+输出为 GitHub Actions 注解格式（`::error::` / `::warning::`），本地与 CI 行为一致。
 
 ---
 

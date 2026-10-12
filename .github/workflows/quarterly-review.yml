@@ -1,0 +1,65 @@
+name: 季度复核提醒
+
+on:
+  schedule:
+    # 每年 1/4/7/10 月 1 日 01:00 UTC（北京时间 09:00）
+    - cron: '0 1 1 1,4,7,10 *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  remind:
+    name: 创建季度复核 issue
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 检查是否已有未关闭的复核 issue
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '季度复核提醒：法规、电价与标准现行状态';
+            const { data } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'review-reminder',
+              per_page: 100,
+            });
+            const exists = data.some(i => i.title === title);
+            core.setOutput('exists', exists ? 'true' : 'false');
+            core.setOutput('title', title);
+            core.info(exists ? '已存在未关闭的复核 issue，跳过创建' : '未发现未关闭的复核 issue');
+
+      - name: 创建复核 issue
+        if: steps.check.outputs.exists == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const title = '${{ steps.check.outputs.title }}';
+            const checklist = fs.readFileSync('.github/REVIEW_CHECKLIST.md', 'utf8');
+            const today = new Date().toISOString().slice(0, 10);
+            const body = [
+              `**触发时间**：${today}（北京时间约 09:00）`,
+              '',
+              '本仓库的数据是快照。法规与电价参数会变，标准会换版。',
+              '请按下方清单完成本轮复核，复核后更新各文件的「核验基线」日期。',
+              '',
+              '---',
+              '',
+              checklist,
+            ].join('\n');
+            const { data } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels: ['review-reminder'],
+            });
+            core.info(`已创建 issue #${data.number}`);
