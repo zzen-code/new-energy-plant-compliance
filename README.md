@@ -101,6 +101,7 @@ references 中每一条文件都带等级标记，**未核验的不得作为结�
 new-energy-plant-compliance/
 ├── SKILL.md                              # 入口：执业人格 + 八条核心原则 + 工作流
 ├── README.md                             # 本文件
+├── AGENTS.md                             # 给 AI Agent 的维护须知（纪律 + 约束 + 缺口）
 ├── LICENSE                               # MIT
 ├── references/
 │   ├── legal-framework.md                # 六层法规体系
