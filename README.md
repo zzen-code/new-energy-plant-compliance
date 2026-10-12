@@ -123,7 +123,11 @@ new-energy-plant-compliance/
 ├── scripts/
 │   └── validate_skill.py                 # 结构校验脚本（可本地运行）
 └── .github/
-    ├── REVIEW_CHECKLIST.md               # 季度复核清单
+    ├── REVIEW_CHECKLIST.md               # 季度复核清单（完整版）
+    ├── ISSUE_TEMPLATE/
+    │   ├── review-reminder.md            # 手动开复核 issue（定时任务被禁用时的备用）
+    │   ├── data-correction.md            # 数据纠错 / 文号失效
+    │   └── config.yml                    # Issue 选择页的快捷链接
     └── workflows/
         ├── validate.yml                  # CI：结构校验
         └── quarterly-review.yml          # 定时：创建复核 issue
@@ -198,6 +202,15 @@ GB/T 19963-2011 还是现行标准吗？
 
 复核清单见 [`.github/REVIEW_CHECKLIST.md`](.github/REVIEW_CHECKLIST.md)，按"变化速度"排序：电价与市场规则（季度）→ 标准现行状态（半年）→ 法律修订（年度）。
 
+### Issue 模板
+
+| 模板 | 用途 |
+|---|---|
+| **季度复核** | 手动开复核 issue。**定时任务会被 GitHub 在仓库 60 天无活动后自动禁用**，届时用这个模板手动开 |
+| **数据纠错 / 文号失效** | 发现标准换版、文号废止、数值有误，或某条"未确认"已有答案时使用 |
+
+> 纠错模板**强制要求附来源 URL**——这是本仓库的纪律。没有来源的纠错无法采纳。
+
 **本地校验**（无第三方依赖，装不装 PyYAML 都能跑）：
 
 ```bash
@@ -227,7 +240,9 @@ python scripts/validate_skill.py
 
 ## 贡献指南
 
-欢迎提交 PR 补充或更新。请遵守本项目的核验纪律：
+欢迎提交 PR 补充或更新。**发现文号失效、标准换版或数值有误，建议先用 [数据纠错模板](../../issues/new?template=data-correction.md) 提 issue**（模板会引导你填写来源）。
+
+提交 PR 时请遵守本项目的核验纪律：
 
 1. **每条新增/修改必须附来源 URL 与核验等级**（`【已核验】`/`【摘要级】`/`【未确认】`）。
 2. **不得凭记忆填写标准号、文号、版本年或日期**——这是本项目最容易被污染的地方。

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 季度复核清单（完整版）
+    url: https://github.com/zzen-code/new-energy-plant-compliance/blob/main/.github/REVIEW_CHECKLIST.md
+    about: 按变化速度排序的完整复核清单：电价（季度）→ 标准（半年）→ 法律（年度）
+  - name: 核验规程与权威查询入口
+    url: https://github.com/zzen-code/new-energy-plant-compliance/blob/main/references/authorities-and-verification.md
+    about: 四步核验法、权威入口清单、已知的引用陷阱
